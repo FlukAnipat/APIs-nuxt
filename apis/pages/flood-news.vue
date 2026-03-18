@@ -141,7 +141,7 @@
 </template>
 
 <script>
-var API_URL = 'http://localhost:3001/news/flood'
+var API_URL = 'https://apis-nuxt-production.up.railway.app/news/flood'
 
 var FILTERS = [
   { key: 'flood',    label: 'น้ำท่วม',    icon: '🌊', color: 'blue',
