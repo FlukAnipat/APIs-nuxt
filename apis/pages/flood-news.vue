@@ -123,11 +123,12 @@
           </div>
 
           <!-- Content -->
+          <!-- Content -->
           <v-card-text class="pt-3 pb-2" style="flex:1">
-            <p class="body-2 font-weight-bold white--text mb-2" style="line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden">
+            <p class="body-2 font-weight-bold white--text mb-2 clamp-2">
               {{ item.title }}
             </p>
-            <p class="caption mb-0" style="color:#6b7280; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.6">
+            <p class="caption mb-0 clamp-2" style="color:#6b7280; line-height:1.6">
               {{ item.description }}
             </p>
           </v-card-text>
