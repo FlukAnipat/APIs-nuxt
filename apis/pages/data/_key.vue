@@ -117,31 +117,42 @@ import { RSS_LIST } from '../../utils/apiConfig.js'
 export default {
   name: 'NewsPage',
   data: function () {
-    return {
-      items:        [],
-      loading:      false,
-      error:        null,
-      activeFilter: null,
-    }
-  },
-  computed: {
-    feed: function () {
-      return RSS_LIST.find(function (r) {
-        return r.key === this.$route.params.key
-      }.bind(this)) || null
-    },
+  return {
+    items:        [],
+    loading:      false,
+    error:        null,
+    activeFilter: null,
+    filters:      FILTERS,
+    currentPage:  1,
+    perPage:      10,   // ← ตายตัว
+  }
+},
+computed: {
     filteredItems: function () {
-      var self = this
-      if (!self.activeFilter || !self.feed) return self.items
-      var f = self.feed.filters.find(function (f) { return f.key === self.activeFilter })
-      if (!f) return self.items
-      return self.items.filter(function (item) {
-        return f.keywords.some(function (kw) {
-          return item.title.includes(kw) || item.description.includes(kw)
-        })
+    var self = this
+    if (!self.activeFilter) return self.items
+    var f = FILTERS.find(function (f) { return f.key === self.activeFilter })
+    if (!f) return self.items
+    return self.items.filter(function (item) {
+      return f.keywords.some(function (kw) {
+        return item.title.includes(kw) || item.description.includes(kw)
       })
-    }
+    })
   },
+  totalPages: function () {
+    return Math.max(1, Math.ceil(this.filteredItems.length / this.perPage))
+  },
+  pageStart: function () {
+    return (this.currentPage - 1) * this.perPage + 1
+  },
+  pageEnd: function () {
+    return Math.min(this.currentPage * this.perPage, this.filteredItems.length)
+  },
+  pagedItems: function () {
+    var start = (this.currentPage - 1) * this.perPage
+    return this.filteredItems.slice(start, start + this.perPage)
+  },
+},
   watch: {
     '$route.params.key': function () {
       this.activeFilter = null

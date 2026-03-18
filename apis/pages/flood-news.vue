@@ -5,7 +5,7 @@
     <div class="d-flex align-start justify-space-between mb-5 flex-wrap" style="gap:16px">
       <div>
         <div class="page-header mb-1">
-          <h1 class="text-h5 font-weight-bold white--text">ข่าวทั่วไป</h1>
+          <h1 class="text-h5 font-weight-bold white--text">News - ข่าวทั่วไป</h1>
         </div>
         <p class="caption mb-0" style="color:#6b7280">ข่าวสดจาก Thai PBS — อัปเดตอัตโนมัติ</p>
       </div>
@@ -14,14 +14,8 @@
           <v-icon left x-small>mdi-newspaper</v-icon>
           {{ filteredItems.length }} ข่าว
         </v-chip>
-        <v-btn
-          small depressed color="#1f2937"
-          :loading="loading"
-          @click="fetchNews"
-          style="border:1px solid #374151"
-        >
-          <v-icon left small>mdi-refresh</v-icon>
-          รีเฟรช
+        <v-btn small depressed color="#1f2937" :loading="loading" @click="fetchNews" style="border:1px solid #374151">
+          <v-icon left small>mdi-refresh</v-icon>รีเฟรช
         </v-btn>
       </div>
     </div>
@@ -36,7 +30,7 @@
           small class="filter-chip font-weight-medium"
           :color="activeFilter === null ? 'primary' : ''"
           :outlined="activeFilter !== null"
-          @click="activeFilter = null"
+          @click="setFilter(null)"
         >
           <v-icon left x-small>mdi-view-grid-outline</v-icon>
           ทั้งหมด
@@ -47,7 +41,7 @@
           small class="filter-chip font-weight-medium"
           :color="activeFilter === f.key ? f.color : ''"
           :outlined="activeFilter !== f.key"
-          @click="activeFilter = activeFilter === f.key ? null : f.key"
+          @click="setFilter(f.key)"
         >
           {{ f.icon }} {{ f.label }}
           <span class="ml-1" style="opacity:.7">({{ countFilter(f.keywords) }})</span>
@@ -57,7 +51,7 @@
 
     <!-- Loading -->
     <v-row v-if="loading">
-      <v-col v-for="i in 6" :key="i" cols="12" sm="6" md="4">
+      <v-col v-for="i in perPage" :key="i" cols="12" sm="6" md="4">
         <v-skeleton-loader type="image, article" dark />
       </v-col>
     </v-row>
@@ -78,10 +72,7 @@
 
     <!-- Cards -->
     <v-row v-else>
-      <v-col
-        v-for="(item, idx) in filteredItems" :key="idx"
-        cols="12" sm="6" md="4"
-      >
+      <v-col v-for="(item, idx) in pagedItems" :key="idx" cols="12" sm="6" md="4">
         <v-card
           :href="item.link" target="_blank" rel="noopener"
           color="#111827" outlined
@@ -90,47 +81,28 @@
         >
           <!-- รูป -->
           <div style="position:relative; height:190px; overflow:hidden; background:#1f2937">
-            <v-img
-              v-if="item.image"
-              :src="item.image"
-              height="190"
-              @error="item.image = ''"
-            >
+            <v-img v-if="item.image" :src="item.image" height="190" @error="item.image = ''">
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-progress-circular size="24" width="2" indeterminate color="grey" />
                 </v-row>
               </template>
             </v-img>
-            <div
-              v-else
-              class="d-flex align-center justify-center fill-height"
-            >
+            <div v-else class="d-flex align-center justify-center fill-height">
               <v-icon size="40" color="#374151">mdi-image-outline</v-icon>
             </div>
-
-            <!-- Badges -->
             <div style="position:absolute; top:10px; left:10px; display:flex; gap:5px">
               <v-chip x-small color="primary" style="font-size:9px;font-weight:700">Thai PBS</v-chip>
-              <v-chip
-                v-if="getTag(item)"
-                x-small :color="getTagColor(item)"
-                style="font-size:9px;font-weight:700"
-              >
+              <v-chip v-if="getTag(item)" x-small :color="getTagColor(item)" style="font-size:9px;font-weight:700">
                 {{ getTag(item) }}
               </v-chip>
             </div>
           </div>
 
           <!-- Content -->
-          <!-- Content -->
           <v-card-text class="pt-3 pb-2" style="flex:1">
-            <p class="body-2 font-weight-bold white--text mb-2 clamp-2">
-              {{ item.title }}
-            </p>
-            <p class="caption mb-0 clamp-2" style="color:#6b7280; line-height:1.6">
-              {{ item.description }}
-            </p>
+            <p class="body-2 font-weight-bold white--text mb-2 clamp-2">{{ item.title }}</p>
+            <p class="caption mb-0 clamp-2" style="color:#6b7280; line-height:1.6">{{ item.description }}</p>
           </v-card-text>
 
           <v-divider style="border-color:#1f2937" />
@@ -146,6 +118,24 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Pagination -->
+    <div v-if="!loading && !error && totalPages > 1" class="d-flex justify-center mt-8">
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="7"
+        color="primary"
+        @input="onPageChange"
+      />
+    </div>
+
+    <!-- Page info -->
+    <div v-if="!loading && totalPages > 1" class="text-center mt-2">
+      <span class="caption" style="color:#4b5563">
+        หน้า {{ currentPage }} / {{ totalPages }}
+      </span>
+    </div>
 
   </v-container>
 </template>
@@ -173,9 +163,14 @@ export default {
       error:        null,
       activeFilter: null,
       filters:      FILTERS,
+      currentPage:  1,
+      perPageIndex: '12',
     }
   },
   computed: {
+    perPage: function () {
+      return parseInt(this.perPageIndex)
+    },
     filteredItems: function () {
       var self = this
       if (!self.activeFilter) return self.items
@@ -186,7 +181,21 @@ export default {
           return item.title.includes(kw) || item.description.includes(kw)
         })
       })
-    }
+    },
+    totalPages: function () {
+      return Math.ceil(this.filteredItems.length / this.perPage)
+    },
+    pageStart: function () {
+      return (this.currentPage - 1) * this.perPage + 1
+    },
+    pageEnd: function () {
+      return Math.min(this.currentPage * this.perPage, this.filteredItems.length)
+    },
+    pagedItems: function () {
+      var start = (this.currentPage - 1) * this.perPage
+      var end   = start + this.perPage
+      return this.filteredItems.slice(start, end)
+    },
   },
   mounted: function () { this.fetchNews() },
   methods: {
@@ -199,9 +208,20 @@ export default {
           if (!r.ok) throw new Error('HTTP ' + r.status)
           return r.json()
         })
-        .then(function (data) { self.items = data.items || [] })
+        .then(function (data) {
+          self.items       = data.items || []
+          self.currentPage = 1
+        })
         .catch(function (e) { self.error = e.message })
         .finally(function () { self.loading = false })
+    },
+    setFilter: function (key) {
+      this.activeFilter = key
+      this.currentPage  = 1  // reset หน้าเมื่อเปลี่ยน filter
+    },
+    onPageChange: function () {
+      // scroll ขึ้นบนเมื่อเปลี่ยนหน้า
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
     countFilter: function (keywords) {
       return this.items.filter(function (item) {
@@ -233,14 +253,11 @@ export default {
       var d = new Date(dateStr)
       if (isNaN(d.getTime())) return dateStr
       return d.toLocaleDateString('th-TH', {
-        year:   'numeric',
-        month:  'short',
-        day:    'numeric',
-        hour:   '2-digit',
-        minute: '2-digit'
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
       })
     },
   },
-  head: function () { return { title: 'ข่าวทั่วไป' } }
+  head: function () { return { title: 'News' } }
 }
 </script>

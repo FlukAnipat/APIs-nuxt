@@ -4,7 +4,7 @@
     <!-- Header -->
     <div class="mb-8">
       <div class="page-header mb-2">
-        <h1 class="text-h5 font-weight-bold white--text">APIs Explorer</h1>
+        <h1 class="text-h5 font-weight-bold white--text">Dashboard - APIs Explorer</h1>
       </div>
       <p class="body-2 mb-0" style="color:#6b7280">
         รวม API และแหล่งข้อมูลที่ใช้งานในโปรเจค — เลือกหมวดด้านล่างเพื่อดูข้อมูล
