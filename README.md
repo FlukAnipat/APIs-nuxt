@@ -1,93 +1,194 @@
-# testgitlab
+# APIs Explorer
 
+ระบบรวม API และ RSS Feed สำหรับแสดงข้อมูลภูมิสารสนเทศและข่าวสาร
+พัฒนาด้วย Nuxt 2 + Vuetify 2 (Frontend) และ NestJS (Backend)
 
+---
 
-## Getting started
+## Tech Stack
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+| ส่วน | Technology |
+|---|---|
+| Frontend | Nuxt 2, Vue 2, Vuetify 2 |
+| Backend | NestJS |
+| Font | Sarabun (Google Fonts) |
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+## โครงสร้างโปรเจค
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/FlukAnipat/testgitlab.git
-git branch -M main
-git push -uf origin main
+apis/                          ← Nuxt (Frontend) port 3000
+├── assets/
+│   ├── global.css             ← Global styles ทั้งหมด
+│   └── variables.scss         ← Vuetify SCSS variables
+│
+├── layouts/
+│   └── default.vue            ← Layout หลัก (Sidebar + v-main)
+│
+├── pages/
+│   ├── index.vue              ← หน้าแรก Dashboard
+│   ├── flood-news.vue         ← หน้าข่าวทั่วไป (Thai PBS RSS)
+│   └── data/
+│       └── _key.vue           ← หน้าแสดงข้อมูล REST API (dynamic route)
+│
+├── utils/
+│   └── apiConfig.js           ← ⭐ Config กลาง — เพิ่ม API/RSS ที่นี่ที่เดียว
+│
+├── nuxt.config.js
+└── package.json
+
+nestjs-backend/                ← NestJS (Backend) port 3001
+└── src/
+    └── news/
+        ├── news.controller.ts
+        ├── news.service.ts
+        └── news.module.ts
 ```
 
-## Integrate with your tools
+---
 
-* [Set up project integrations](https://gitlab.com/FlukAnipat/testgitlab/-/settings/integrations)
+## วิธีรันโปรเจค
+```bash
+# Frontend (Nuxt)
+cd apis
+npm install
+npm run dev
+# → http://localhost:3000
 
-## Collaborate with your team
+# Backend (NestJS)
+cd nestjs-backend
+npm install
+npm run start:dev
+# → http://localhost:3001
+```
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+## ⭐ วิธีเพิ่ม API หรือ RSS ใหม่
 
-Use the built-in continuous integration in GitLab.
+### ไฟล์หลักที่ต้องแก้: `utils/apiConfig.js`
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+แก้ไขไฟล์นี้ที่เดียว — Sidebar, หน้าแรก, และหน้าข้อมูล จะอัปเดตอัตโนมัติ
 
-***
+---
 
-# Editing this README
+### เพิ่ม REST API ใหม่
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+เพิ่ม object ใน `API_LIST`:
+```js
+// utils/apiConfig.js
+export const API_LIST = [
+  {
+    type:        'api',          // ← ต้องเป็น 'api'
+    key:         'drought',      // ← unique key, ใช้เป็น route: /data/drought
+    resource:    'drought',      // ← path หลัง /features/ ของ GISTDA
+    label:       'ภัยแล้ง',      // ← ชื่อที่แสดงใน sidebar และ card
+    icon:        '☀️',           // ← emoji icon
+    color:       'orange',       // ← Vuetify color
+    desc:        'ข้อมูลพื้นที่ภัยแล้งทั่วประเทศ',
+    params:      {},             // ← query params เพิ่มเติม เช่น { sort: 'asc' }
+  },
+]
+```
 
-## Suggestions for a good README
+จากนั้นเข้าที่ `http://localhost:3000/data/drought` ได้เลย ไม่ต้องสร้างไฟล์เพิ่ม
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+**Endpoint ที่เรียก:**
+```
+GET https://api-gateway.gistda.or.th/api/2.0/resources/features/{resource}?limit=10&offset=0
+Headers: API-Key: {API_KEY}
+```
 
-## Name
-Choose a self-explaining name for your project.
+---
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### เพิ่ม RSS Feed ใหม่
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+**ขั้นตอนที่ 1 — เพิ่ม config ใน `utils/apiConfig.js`:**
+```js
+export const RSS_LIST = [
+  {
+    type:     'rss',                                    // ← ต้องเป็น 'rss'
+    key:      'matichon',                               // ← unique key
+    label:    'มติชน',                                  // ← ชื่อที่แสดง
+    icon:     '🗞️',
+    color:    'purple',
+    desc:     'ข่าวสดจากมติชนออนไลน์',
+    backend:  'http://localhost:3001/news/matichon',    // ← NestJS endpoint
+    filters: [                                          // ← ปุ่ม filter (ใส่ [] ถ้าไม่ต้องการ)
+      {
+        key:      'politics',
+        label:    'การเมือง',
+        icon:     '🏛️',
+        color:    'blue',
+        keywords: ['การเมือง','รัฐบาล','นายกฯ','รัฐสภา'],
+      },
+    ],
+  },
+]
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+**ขั้นตอนที่ 2 — เพิ่ม endpoint ใน NestJS `news.controller.ts`:**
+```typescript
+@Get('matichon')
+async getMatichonNews() {
+  return this.newsService.fetchRSSAndReturn('https://www.matichon.co.th/feed');
+}
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+**ขั้นตอนที่ 3 — เพิ่ม method ใน NestJS `news.service.ts`:**
+```typescript
+async fetchRSSAndReturn(rssUrl: string) {
+  const res  = await fetch(rssUrl);
+  const xml  = await res.text();
+  const items = this.parseRSS(xml);
+  items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  return { total: items.length, items };
+}
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+จากนั้นเข้าที่ `http://localhost:3000/news/matichon` ได้เลย
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+---
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## API Headers
+```
+Authorization: Bearer {API_KEY}
+API-Key: {API_KEY}
+accept: application/json
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Response Format (GISTDA)
+```json
+{
+  "features": [
+    {
+      "id": "...",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[...]]
+      },
+      "properties": {
+        "name": "...",
+        "province": "...",
+        ...
+      }
+    }
+  ]
+}
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+---
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## รายการ API/RSS ปัจจุบัน
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+| ชื่อ | ประเภท | Source | Route |
+|---|---|---|---|
+| ข่าวทั่วไป | RSS | Thai PBS | `/flood-news` |
 
-## License
-For open source projects, say how it is licensed.
+---
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## ทีมพัฒนา
+
+โปรเจคนี้พัฒนาโดยทีม 2 คน
+อยากเพิ่ม API ใหม่ → แก้แค่ `utils/apiConfig.js` และ NestJS controller
