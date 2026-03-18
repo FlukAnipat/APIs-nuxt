@@ -107,6 +107,40 @@
         </v-tooltip>
 
       </v-list>
+     <!-- ── ข้อมูลทั่วไป ── -->
+    <template v-if="externalList.length > 0">
+      <v-divider class="my-2" style="border-color:#1f2937" />
+
+      <v-subheader v-if="!mini" class="caption font-weight-bold px-2" style="color:#4b5563;height:24px;letter-spacing:1px">
+        ข้อมูลทั่วไป
+      </v-subheader>
+
+      <v-tooltip
+        v-for="item in externalList"
+        :key="item.key"
+        right :disabled="!mini"
+      >
+        <template v-slot:activator="{ on }">
+          <v-list-item
+            nuxt :to="item.page"
+            active-class="v-list-item--active"
+            class="rounded-lg mb-1"
+            v-on="on"
+          >
+            <v-list-item-icon class="mr-3" style="align-items:center">
+              <span style="font-size:17px;line-height:1">{{ item.icon }}</span>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="body-2">{{ item.label }}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action v-if="!mini">
+              <v-chip x-small :color="item.color" outlined style="font-size:9px">API</v-chip>
+            </v-list-item-action>
+          </v-list-item>
+        </template>
+        <span>{{ item.label }}</span>
+      </v-tooltip>
+    </template>
 
       <!-- Toggle -->
       <template v-slot:append>
@@ -137,17 +171,21 @@
   </v-app>
 </template>
 
+
+
 <script>
-import { API_LIST } from '../utils/apiConfig.js'
-export default {
-  data: function () {
-    return {
-      drawer:  true,
-      mini:    false,
-      apiList: API_LIST,
+  import { API_LIST, RSS_LIST, EXTERNAL_LIST } from '../utils/apiConfig.js'
+  export default {
+    data: function () {
+      return {
+        drawer:       true,
+        mini:         false,
+        apiList:      API_LIST,
+        rssList:      RSS_LIST,
+        externalList: EXTERNAL_LIST,
+      }
     }
   }
-}
 </script>
 
 <style scoped>
