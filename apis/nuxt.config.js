@@ -34,15 +34,14 @@ export default {
   modules: [],
 
    axios: {
-    baseURL: process.env.API_BASE_URL || 'apis-nuxt-production.up.railway.app'
-  },
+      baseURL: process.env.API_BASE_URL || 'http://localhost:3001'
+    },
 
-  // เพิ่ม publicRuntimeConfig สำหรับ client-side
-  publicRuntimeConfig: {
-    axios: {
-      baseURL: process.env.API_BASE_URL || 'apis-nuxt-production.up.railway.app'
-    }
-  },
+    publicRuntimeConfig: {
+      axios: {
+        baseURL: process.env.API_BASE_URL || 'http://localhost:3001'
+      }
+    },
 
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
