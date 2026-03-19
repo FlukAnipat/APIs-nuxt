@@ -33,6 +33,17 @@ export default {
 
   modules: [],
 
+   axios: {
+    baseURL: process.env.API_BASE_URL || 'apis-nuxt-production.up.railway.app'
+  },
+
+  // เพิ่ม publicRuntimeConfig สำหรับ client-side
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: process.env.API_BASE_URL || 'apis-nuxt-production.up.railway.app'
+    }
+  },
+
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     defaultAssets: { icons: 'mdi' },
