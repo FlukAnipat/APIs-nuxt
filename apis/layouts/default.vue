@@ -141,6 +141,7 @@
         <span>{{ item.label }}</span>
       </v-tooltip>
     </template>
+    
 
       <!-- Toggle -->
       <template v-slot:append>

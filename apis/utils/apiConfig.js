@@ -2,13 +2,6 @@ export const API_BASE    = 'https://api-gateway.gistda.or.th/api/2.0/resources/f
 export const API_KEY     = 'OrXGljzmxFt9OJbyr5s7ZaTw8F0fRuvwTQ3VNuyEsnpMh98tzTrJzbjsd5z9nqkf'
 export const API_HEADERS = { 'accept': 'application/json', 'API-Key': API_KEY }
 
-// ─────────────────────────────────────────────────────────
-// เพิ่ม API / RSS / External ใหม่แค่ตรงนี้ที่เดียว
-//
-// type: 'api'      = REST API ข้อมูล GeoJSON (GISTDA)
-// type: 'rss'      = RSS Feed ข่าว (ผ่าน NestJS backend)
-// type: 'external' = External API เรียกตรงจาก frontend
-// ─────────────────────────────────────────────────────────
 export const MENU_LIST = [
 
   // ── RSS Feed ──────────────────────────────────────────
@@ -34,6 +27,7 @@ export const MENU_LIST = [
   },
 
   // ── External API ──────────────────────────────────────
+  // น้ำมัน
   {
     type:    'external',
     key:     'oil-price',
@@ -44,6 +38,17 @@ export const MENU_LIST = [
     url:     'https://api.chnwt.dev/thai-oil-api/latest',
     page:    '/oil-price',
   },
+// ทองคำ
+  {
+  type:    'external',
+  key:     'gold-price',
+  label:   'Gold Price',
+  icon:    '💰',
+  color:   'amber',
+  desc:    'ราคาทองคำรูปพรรณและทองแท่งประจำวัน',
+  url:     'https://api.chnwt.dev/thai-gold-api/latest',
+  page:    '/gold-price',
+},
 
 
 ]
