@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0" style="max-width:100%">
+  <v-container style="max-width:1100px" class="px-3 px-sm-6 pb-10">
 
     <!-- Hero -->
     <div class="oil-hero">
@@ -405,5 +405,10 @@ export default {
   font-size: 11px;
   color: #4b5563;
   margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .gold-type-title { font-size: 15px; }
+  .price-buy, .price-sell { font-size: 18px; }
+  .chart-wrap { height: 300px; }
 }
 </style>

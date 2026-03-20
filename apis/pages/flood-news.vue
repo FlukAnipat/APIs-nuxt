@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid class="pa-6" style="max-width:1200px">
+  <v-container fluid class="pa-3 pa-sm-6" style="max-width:1200px">
 
     <!-- Header -->
-    <div class="d-flex align-start justify-space-between mb-5 flex-wrap" style="gap:16px">
+    <div class="d-flex align-start justify-space-between mb-5 flex-wrap" style="gap:12px">
       <div>
         <div class="page-header mb-1">
           <h1 class="text-h5 font-weight-bold white--text">News - ข่าวทั่วไป</h1>
@@ -25,7 +25,7 @@
       <div class="caption font-weight-bold text-uppercase mb-2" style="color:#4b5563;letter-spacing:1px">
         กรองตามหมวด
       </div>
-      <div class="d-flex flex-wrap" style="gap:8px">
+      <div class="d-flex flex-nowrap overflow-x-auto pb-1" style="gap:8px; -webkit-overflow-scrolling:touch">
         <v-chip
           small class="filter-chip font-weight-medium"
           :color="activeFilter === null ? 'primary' : ''"
@@ -51,7 +51,7 @@
 
     <!-- Loading -->
     <v-row v-if="loading">
-      <v-col v-for="i in perPage" :key="i" cols="12" sm="6" md="4">
+      <v-col v-for="(item, idx) in pagedItems" :key="idx" cols="12" sm="6" md="4">
         <v-skeleton-loader type="image, article" dark />
       </v-col>
     </v-row>

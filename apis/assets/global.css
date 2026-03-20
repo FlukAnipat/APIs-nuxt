@@ -1,3 +1,4 @@
+/* ================= Global ================= */
 * { box-sizing: border-box; }
 
 html, body {
@@ -5,6 +6,8 @@ html, body {
   background: #0a0e17 !important;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ================= Clamp Text ================= */
 .clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -18,29 +21,111 @@ html, body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* ── Scrollbar ── */
+
+/* ================= Scrollbar ================= */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #111827; }
 ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 
-/* ── Sidebar ── */
-.v-navigation-drawer { border-right: 1px solid #1f2937 !important; }
-.v-navigation-drawer .v-list-item--active { background: rgba(59,130,246,.12) !important; }
-.v-navigation-drawer .v-list-item--active .v-icon { color: #3b82f6 !important; }
-.v-subheader { font-size: 10px !important; letter-spacing: 1px !important; }
+/* ================= Sidebar ================= */
+.v-navigation-drawer {
+  border-right: 1px solid #1f2937 !important;
+}
+.v-navigation-drawer .v-list-item--active {
+  background: rgba(59,130,246,.12) !important;
+}
+.v-navigation-drawer .v-list-item--active .v-icon {
+  color: #3b82f6 !important;
+}
+.v-subheader {
+  font-size: 10px !important;
+  letter-spacing: 1px !important;
+}
 
-/* ── Card ── */
-.api-card { border: 1px solid #1f2937 !important; transition: border-color .2s, transform .2s !important; }
-.api-card:hover { border-color: #3b82f6 !important; transform: translateY(-2px) !important; }
+/* ================= Card ================= */
+.api-card {
+  border: 1px solid #1f2937 !important;
+  transition: border-color .2s, transform .2s !important;
+}
+.api-card:hover {
+  border-color: #3b82f6 !important;
+  transform: translateY(-2px) !important;
+}
 
-/* ── News Card ── */
-.news-card { border: 1px solid #1f2937 !important; transition: border-color .2s, transform .2s !important; height: 100%; display: flex; flex-direction: column; }
-.news-card:hover { border-color: #3b82f6 !important; transform: translateY(-2px) !important; }
-.news-card .v-card__title { font-size: 14px !important; line-height: 1.5 !important; word-break: break-word; }
+/* ================= News Card ================= */
+.news-card {
+  border: 1px solid #1f2937 !important;
+  transition: border-color .2s, transform .2s !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.news-card:hover {
+  border-color: #3b82f6 !important;
+  transform: translateY(-2px) !important;
+}
+.news-card .v-card__title {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  word-break: break-word;
+}
 
-/* ── Chip filter ── */
-.filter-chip { cursor: pointer; transition: all .15s !important; }
+/* ================= Chip ================= */
+.filter-chip {
+  cursor: pointer;
+  transition: all .15s !important;
+}
 
-/* ── Page header ── */
-.page-header { border-left: 3px solid #3b82f6; padding-left: 14px; }
+/* ================= Page Header ================= */
+.page-header {
+  border-left: 3px solid #3b82f6;
+  padding-left: 14px;
+}
+
+/* ================= Mobile ================= */
+@media (max-width: 600px) {
+  .v-container {
+    padding: 12px !important;
+  }
+  .page-header h1 {
+    font-size: 18px !important;
+  }
+}
+
+/* ================= Smooth Scroll ================= */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ================= Input Fix iOS ================= */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* ================= Leaflet Fix ================= */
+
+/* ป้องกัน map ทับ navbar / sidebar */
+.leaflet-pane { z-index: 1 !important; }
+.leaflet-tile-pane { z-index: 2 !important; }
+.leaflet-overlay-pane { z-index: 3 !important; }
+.leaflet-shadow-pane { z-index: 4 !important; }
+.leaflet-marker-pane { z-index: 5 !important; }
+.leaflet-tooltip-pane { z-index: 6 !important; }
+.leaflet-popup-pane { z-index: 7 !important; }
+.leaflet-control { z-index: 8 !important; }
+
+/* ปรับตำแหน่ง controls ไม่ให้ชน app bar */
+@media (max-width: 960px) {
+  .leaflet-top.leaflet-left,
+  .leaflet-top.leaflet-right {
+    top: 60px !important;
+  }
+}
+
+/* ป้องกัน map overflow */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}

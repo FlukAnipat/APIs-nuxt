@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-6" style="max-width:1100px">
+  <v-container fluid class="pa-3 pa-sm-6" style="max-width:1100px">
 
     <div class="mb-8">
       <div class="page-header mb-2">
@@ -12,25 +12,25 @@
 
     <!-- Stats -->
     <v-row class="mb-6">
-      <v-col cols="6" sm="3">
+      <v-col cols="3" sm="3">
         <v-card color="#111827" outlined class="pa-4 text-center" style="border-color:#1f2937">
           <div class="text-h4 font-weight-bold primary--text">{{ totalCount }}</div>
           <div class="caption mt-1" style="color:#6b7280">แหล่งข้อมูลทั้งหมด</div>
         </v-card>
       </v-col>
-      <v-col cols="6" sm="3">
+      <v-col cols="3" sm="3">
         <v-card color="#111827" outlined class="pa-4 text-center" style="border-color:#1f2937">
           <div class="text-h4 font-weight-bold success--text">{{ apiList.length }}</div>
           <div class="caption mt-1" style="color:#6b7280">REST API</div>
         </v-card>
       </v-col>
-      <v-col cols="6" sm="3">
+      <v-col cols="3" sm="3">
         <v-card color="#111827" outlined class="pa-4 text-center" style="border-color:#1f2937">
           <div class="text-h4 font-weight-bold warning--text">{{ rssList.length }}</div>
           <div class="caption mt-1" style="color:#6b7280">RSS Feed</div>
         </v-card>
       </v-col>
-      <v-col cols="6" sm="3">
+      <v-col cols="3" sm="3">
         <v-card color="#111827" outlined class="pa-4 text-center" style="border-color:#1f2937">
           <div class="text-h4 font-weight-bold info--text">{{ externalList.length }}</div>
           <div class="caption mt-1" style="color:#6b7280">External API</div>

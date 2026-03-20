@@ -8,7 +8,7 @@ export const MENU_LIST = [
   {
     type:     'rss',
     key:      'thaipbs-region',
-    label:    'ข่าวทั่วไป',
+    label:    'News',
     icon:     '📰',
     color:    'blue',
     desc:     'ข่าวสดจาก Thai PBS',
@@ -49,6 +49,18 @@ export const MENU_LIST = [
   url:     'https://api.chnwt.dev/thai-gold-api/latest',
   page:    '/gold-price',
 },
+//สภาพอากาศ
+{
+  type:    'external',
+  key:     'weather',
+  label:   'Weather',
+  icon:    '🌤️',
+  color:   'blue',
+  desc:    'สรุปสภาพอากาศภาพรวมประเทศไทยตอนนี้',
+  url:     'https://api.open-meteo.com/v1/forecast',
+  page:    '/weather',
+},
+
 
 
 ]
@@ -57,3 +69,4 @@ export const MENU_LIST = [
 export const API_LIST      = MENU_LIST.filter(function (m) { return m.type === 'api' })
 export const RSS_LIST      = MENU_LIST.filter(function (m) { return m.type === 'rss' })
 export const EXTERNAL_LIST = MENU_LIST.filter(function (m) { return m.type === 'external' })
+
